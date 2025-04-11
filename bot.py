@@ -22,6 +22,21 @@ from LucyBot.Bot import Codeflix
 from LucyBot.util.keepalive import ping_server
 from LucyBot.Bot.clients import initialize_clients
 
+import threading
+import requests
+import time
+ 
+def keep_alive():
+    while True:
+        try:
+            requests.get("https://exotic-darb-monish2807-df2d5a43.koyeb.app/")
+        except:
+            pass
+        time.sleep(90)  # Ping every 5 minutes
+ 
+threading.Thread(target=keep_alive, daemon=True).start()
+
+
 logging.config.fileConfig('logging.conf')
 logging.getLogger().setLevel(logging.INFO)
 logging.getLogger("pyrogram").setLevel(logging.ERROR)
