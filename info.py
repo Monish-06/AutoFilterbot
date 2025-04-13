@@ -90,19 +90,19 @@ HOW_TO_VERIFY = environ.get('HOW_TO_VERIFY', 'https://t.me/How_to_Download_7x/30
 # ============================
 # Link Shortener Configuration
 # ============================
-IS_SHORTLINK = bool(environ.get('IS_SHORTLINK', True))
+IS_SHORTLINK = bool(environ.get('IS_SHORTLINK', False))
 SHORTLINK_URL = environ.get('SHORTLINK_URL', 'pocolinks.com')
-SHORTLINK_API = environ.get('SHORTLINK_API', 'cfa1942141a7428ed202523f1dabc8728d9c506c')
+SHORTLINK_API = environ.get('SHORTLINK_API', '')
 TUTORIAL = environ.get('TUTORIAL', '')  # Tutorial video link for opening shortlink website
 IS_TUTORIAL = bool(environ.get('IS_TUTORIAL', False))
 
 # ============================
 # Channel & Group Links Configuration
 # ============================
-GRP_LNK = environ.get('GRP_LNK', 'https://t.me/telemovies_2k_grp')
-CHNL_LNK = environ.get('CHNL_LNK', 'https://t.me/telemovies_2k')
+GRP_LNK = environ.get('GRP_LNK', 'https://t.me/moxi_movies_grp')
+CHNL_LNK = environ.get('CHNL_LNK', 'https://t.me/moxi_movies')
 OWNER_LNK = environ.get('OWNER_LNK', 'https://t.me/iitsme2807')
-MOVIE_UPDATE_CHANNEL_LNK = environ.get('MOVIE_UPDATE_CHANNEL_LNK', 'https://t.me/telemovies_2k')
+MOVIE_UPDATE_CHANNEL_LNK = environ.get('MOVIE_UPDATE_CHANNEL_LNK', 'https://t.me/moxi_movies')
 OWNERID = int(os.environ.get('OWNERID', '6476946240'))  # Replace with the actual admin ID
 
 # ============================
