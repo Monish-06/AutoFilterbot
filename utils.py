@@ -501,64 +501,18 @@ def get_readable_time(seconds):
             result.append(f'{int(period_value)}{period_name}')
     return ' '.join(result)  
 
-async def get_shortlink(chat_id, link):
-    settings = await get_settings(chat_id) #fetching settings for group
-    if 'shortlink' in settings.keys():
-        URL = settings['shortlink']
-        API = settings['shortlink_api']
-    else:
-        URL = SHORTLINK_URL
-        API = SHORTLINK_API
-    if URL.startswith("shorturllink") or URL.startswith("terabox.in") or URL.startswith("urlshorten.in"):
-        URL = SHORTLINK_URL
-        API = SHORTLINK_API
-    if URL == "api.shareus.io":
-        # method 1:
-        # https = link.split(":")[0] #splitting https or http from link
-        # if "http" == https: #if https == "http":
-        #     https = "https"
-        #     link = link.replace("http", https) #replacing http to https
-        # conn = http.client.HTTPSConnection("api.shareus.io")
-        # payload = json.dumps({
-        #   "api_key": "4c1YTBacB6PTuwogBiEIFvZN5TI3",
-        #   "monetization": True,
-        #   "destination": link,
-        #   "ad_page": 3,
-        #   "category": "Entertainment",
-        #   "tags": ["trendinglinks"],
-        #   "monetize_with_money": False,
-        #   "price": 0,
-        #   "currency": "INR",
-        #   "purchase_note":""
-        
-        # })
-        # headers = {
-        #   'Keep-Alive': '',
-        #   'Content-Type': 'application/json'
-        # }
-        # conn.request("POST", "/generate_link", payload, headers)
-        # res = conn.getresponse()
-        # data = res.read().decode("utf-8")
-        # parsed_data = json.loads(data)
-        # if parsed_data["status"] == "success":
-        #   return parsed_data["link"]
-    #method 2
-        url = f'https://{URL}/easy_api'
-        params = {
-            "key": API,
-            "link": link,
-        }
-        try:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(url, params=params, raise_for_status=True, ssl=False) as response:
-                    data = await response.text()
-                    return data
-        except Exception as e:
-            logger.error(e)
-            return link
-    else:
-        shortzy = Shortzy(api_key=API, base_site=URL)
-        link = await shortzy.convert(link)
+import base64
+
+async def get_shortlink(link):
+    try:
+        # Encode the original link to Base64
+        encoded_link = base64.urlsafe_b64encode(link.encode()).decode()
+
+        # Construct the safelink URL with the encoded link
+        safelink_url = f"https://moxibeatz.fun/p/1.html?url={encoded_link}"
+        return safelink_url
+    except Exception as e:
+        logger.error(f"Safelink generation error: {e}")
         return link
     
 async def get_tutorial(chat_id):
@@ -736,55 +690,32 @@ async def get_seconds(time_string):
         return 0
     
 async def send_all(bot, userid, files, ident, chat_id, user_name, query):
-    settings = await get_settings(chat_id)
-    if 'is_shortlink' in settings.keys():
-        ENABLE_SHORTLINK = settings['is_shortlink']
-    else:
-        await save_group_settings(message.chat.id, 'is_shortlink', False)
-        ENABLE_SHORTLINK = False
     try:
-        if ENABLE_SHORTLINK:
-            for file in files:
-                title = file.file_name
-                size = get_size(file.file_size)
-                await bot.send_message(chat_id=userid, text=f"<b>Hᴇʏ ᴛʜᴇʀᴇ {user_name} 👋🏽 \n\n✅ Sᴇᴄᴜʀᴇ ʟɪɴᴋ ᴛᴏ ʏᴏᴜʀ ғɪʟᴇ ʜᴀs sᴜᴄᴄᴇssғᴜʟʟʏ ʙᴇᴇɴ ɢᴇɴᴇʀᴀᴛᴇᴅ ᴘʟᴇᴀsᴇ ᴄʟɪᴄᴋ ᴅᴏᴡɴʟᴏᴀᴅ ʙᴜᴛᴛᴏɴ\n\n🗃️ Fɪʟᴇ Nᴀᴍᴇ : {title}\n🔖 Fɪʟᴇ Sɪᴢᴇ : {size}</b>", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("📤 Dᴏᴡɴʟᴏᴀᴅ 📥", url=await get_shortlink(chat_id, f"https://telegram.me/{temp.U_NAME}?start=files_{file.file_id}"))]]))
-        else:
-            for file in files:
-                    f_caption = file.caption
-                    title = file.file_name
-                    size = get_size(file.file_size)
-                    if CUSTOM_FILE_CAPTION:
-                        try:
-                            f_caption = CUSTOM_FILE_CAPTION.format(file_name='' if title is None else title,
-                                                                    file_size='' if size is None else size,
-                                                                    file_caption='' if f_caption is None else f_caption)
-                        except Exception as e:
-                            print(e)
-                            f_caption = f_caption
-                    if f_caption is None:
-                        f_caption = f"{title}"
-                    await bot.send_cached_media(
-                        chat_id=userid,
-                        file_id=file.file_id,
-                        caption=f_caption,
-                        protect_content=True if ident == "filep" else False,
-                        reply_markup=InlineKeyboardMarkup(
-                            [
-                                [
-                                InlineKeyboardButton('Sᴜᴘᴘᴏʀᴛ Gʀᴏᴜᴘ', url=GRP_LNK),
-                                InlineKeyboardButton('Uᴘᴅᴀᴛᴇs Cʜᴀɴɴᴇʟ', url=CHNL_LNK)
-                            ],[
-                                InlineKeyboardButton("Bᴏᴛ Oᴡɴᴇʀ", url="t.me/cosmic_freak")
-                                ]
-                            ]
-                        )
-                    )
+        for file in files:
+            title = file["file_name"]
+            size = get_size(file["file_size"])
+            original_link = f"https://telegram.me/{temp.U_NAME}?start=files_{file['file_id']}"
+            shortlink = await get_shortlink(chat_id, original_link)
+
+            await bot.send_message(
+                chat_id=userid,
+                text=(
+                    f"<b>Hᴇʏ ᴛʜᴇʀᴇ {user_name} 👋🏽\n\n"
+                    f"✅ Sᴇᴄᴜʀᴇ ʟɪɴᴋ ᴛᴏ ʏᴏᴜʀ ғɪʟᴇ ʜᴀs ʙᴇᴇɴ ɢᴇɴᴇʀᴀᴛᴇᴅ\n"
+                    f"🗃️ Fɪʟᴇ Nᴀᴍᴇ : {title}\n"
+                    f"🔖 Fɪʟᴇ Sɪᴢᴇ : {size}</b>"
+                ),
+                reply_markup=InlineKeyboardMarkup(
+                    [[InlineKeyboardButton("📤 Dᴏᴡɴʟᴏᴀᴅ 📥", url=shortlink)]]
+                )
+            )
     except UserIsBlocked:
         await query.answer('Uɴʙʟᴏᴄᴋ ᴛʜᴇ ʙᴏᴛ ᴍᴀʜɴ !', show_alert=True)
     except PeerIdInvalid:
         await query.answer('Hᴇʏ, Sᴛᴀʀᴛ Bᴏᴛ Fɪʀsᴛ Aɴᴅ Cʟɪᴄᴋ Sᴇɴᴅ Aʟʟ', show_alert=True)
     except Exception as e:
-        await query.answer('Hᴇʏ, Sᴛᴀʀᴛ Bᴏᴛ Fɪʀsᴛ Aɴᴅ Cʟɪᴄᴋ Sᴇɴᴅ Aʟʟ', show_alert=True)
+        await query.answer('Sᴏᴍᴇᴛʜɪɴɢ ᴡᴇɴᴛ ᴡʀᴏɴɢ. Pʟᴇᴀsᴇ ʀᴇᴘᴏʀᴛ ᴛᴏ ᴀᴅᴍɪɴ.', show_alert=True)
+        print(e)
         
 async def get_cap(settings, remaining_seconds, files, query, total_results, search):
     if settings["imdb"]:
