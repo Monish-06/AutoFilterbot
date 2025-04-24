@@ -33,7 +33,7 @@ instance2 = Instance.from_db(db2)
 # Primary DB Model
 @instance.register
 class Media(Document):
-    file_id = fields.StrField(attribute='_id')
+    file_id = fields.StrField(required=True)
     file_ref = fields.StrField(allow_none=True)
     file_name = fields.StrField(required=True)
     file_size = fields.IntField(required=True)
@@ -47,7 +47,7 @@ class Media(Document):
 
 @instance2.register
 class Media2(Document):
-    file_id = fields.StrField(attribute='_id')
+    file_id = fields.StrField(required=True)
     file_ref = fields.StrField(allow_none=True)
     file_name = fields.StrField(required=True)
     file_size = fields.IntField(required=True)
