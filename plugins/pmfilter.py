@@ -56,24 +56,6 @@ BUTTONS2 = {}
 SPELL_CHECK = {}
 
 
-def generate_random_alphanumeric():
-    """Generate a random 8-letter alphanumeric string."""
-    characters = string.ascii_letters + string.digits
-    random_chars = ''.join(random.choice(characters) for _ in range(8))
-    return random_chars
-  
-def get_shortlink_sync(url):
-    try:
-        rget = requests.get(f"https://{STREAM_SITE}/api?api={STREAM_API}&url={url}&alias={generate_random_alphanumeric()}")
-        rjson = rget.json()
-        if rjson["status"] == "success" or rget.status_code == 200:
-            return rjson["shortenedUrl"]
-        else:
-            return url
-    except Exception as e:
-        print(f"Error in get_shortlink_sync: {e}")
-        return url
-
 import base64
 
 async def get_shortlink(link):
