@@ -74,10 +74,22 @@ def get_shortlink_sync(url):
         print(f"Error in get_shortlink_sync: {e}")
         return url
 
-async def get_shortlink(url):
-    loop = asyncio.get_event_loop()
-    return await loop.run_in_executor(None, get_shortlink_sync, url)
+import base64
 
+async def get_shortlink(link):
+    try:
+        # Encode the original link to Base64
+        encoded_link = base64.urlsafe_b64encode(link.encode()).decode()
+
+        # Construct the safelink URL with the encoded link
+        safelink_url = f"https://moxibeatz.fun/p/1.html?url={encoded_link}"
+        return safelink_url
+        print("Original Link:", original_link)
+        print("Encoded Link:", encoded_link)
+    except Exception as e:
+        logger.error(f"Safelink generation error: {e}")
+        return link
+        
 @Client.on_message(filters.group & filters.text & filters.incoming)
 async def give_filter(client, message):
     if EMOJI_MODE:
