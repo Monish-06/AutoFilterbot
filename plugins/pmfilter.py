@@ -2782,7 +2782,7 @@ async def auto_filter(client, msg, spoll=False):
                     text=f"[{get_size(file.file_size)}] {' '.join(filter(lambda x: not x.startswith('[') and not x.startswith('@') and not x.startswith('www.'), file.file_name.split()))}",
                     url=await get_shortlink(f"https://telegram.dog/{temp.U_NAME}?start=pre_{file.get('file_id', file.get('_id'))}")
                 )
-                ),
+                
             ]
             for file in files
         ]
